@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>who really cares</title>
+    
+    <!-- Link to Favicon -->
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <!-- Link to Google Fonts for Manrope -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevent scrolling */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000; /* Set background to black */
+            font-family: 'Manrope', sans-serif; /* Apply Manrope font */
+        }
+
+        .text-background {
+            position: absolute;
+            top: 0;
+            left: 50%; /* Start at the center */
+            transform: translateX(-50%); /* Center align */
+            width: 300vw; /* Stretch far beyond the viewport to cover both sides */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+            overflow: hidden; /* Hide overflow */
+            font-size: 60px; /* Increased font size for better coverage */
+            line-height: 1.1; /* Decreased line height for tighter spacing */
+            text-align: center;
+            white-space: nowrap; /* Prevent wrapping to the next line */
+        }
+
+        .text-background span {
+            display: block;
+            min-width: 200vw; /* Ensure each span takes much more than full width */
+            background: linear-gradient(90deg, 
+                #14131a, /* Deep blackish shade */
+                #ff00f5, /* Vibrant magenta */
+                #001f4d, /* Deep navy blue */
+                #3a0ca3, /* Rich purple-blue */
+                #240046, /* Dark violet-blue */
+                #7209b7, /* Vivid purple-blue */
+                #4361ee /* Brighter electric blue */
+            );
+            -webkit-background-clip: text;
+            color: transparent;
+            background-size: 200% 200%; /* Larger size for smoother transitions */
+            position: relative; /* Allow for position adjustments */
+        }
+
+        @keyframes gradient-animation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .image {
+            position: absolute;
+            bottom: -20px; /* Move the image closer to the bottom of the page */
+            left: 50%; /* Center the image horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            height: 110vh; /* Increase the height of the image */
+            width: auto; /* Maintain aspect ratio */
+            z-index: 1;
+        }
+
+        /* Styling for the "I <3 Kathy" text at the bottom center */
+        .bottom-text {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px; /* Set a reasonable font size */
+            color: #ff00f5; /* Use vibrant magenta color */
+            z-index: 9999; /* Ensure it is on the topmost layer */
+            font-weight: bold; /* Bold text */
+            text-shadow: 2px 2px 5px #000; /* Add some shadow to make it stand out */
+        }
+
+        /* Styling for the "by overlookk" */
+        .bottom-text-container {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px; /* Slightly smaller font */
+            color: #000000; /* Use dark color */
+            z-index: 9999; /* Ensure it is on the topmost layer */
+            font-weight: bold; /* Bold link text */
+        }
+
+        .bottom-link {
+            color: #000000; /* Use dark color */
+            text-decoration: none; /* Remove underline from link */
+            font-weight: bold; /* Bold link text */
+        }
+
+        .bottom-link:hover {
+            color: #363636; /* Change color on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="text-background"></div>
+    <img src="C:/Users/Home/Desktop/webstuff/text test/image.png" alt="Your Image" class="image">
+
+    <!-- Text Overlay -->
+    <div class="bottom-text">♡ u</div>
+
+    <!-- "by overlookk" Text with Link -->
+    <div class="bottom-text-container">
+        by <a href="https://github.com/OverLookk" class="bottom-link" target="_blank">@overlookk</a>
+    </div>
+
+    <script>
+        const textContainer = document.querySelector('.text-background');
+        const phrase = "WHO REALLY CARES ";
+
+        // Create repeated text to fill the background
+        for (let i = 0; i < 60; i++) { // Increased count for more lines
+            const span = document.createElement('span');
+            span.textContent = phrase.repeat(50); // Repeat the phrase enough to fully cover the background
+
+            // Randomize the gradient starting position for each line
+            const backgroundStart = Math.random() * 100;
+            span.style.backgroundPosition = `${backgroundStart}% 50%`;
+
+            textContainer.appendChild(span);
+            animateLine(span, i); // Start the animation for each line
+        }
+
+        // Function to animate the gradient and movement smoothly for each line
+        function animateLine(line, index) {
+            // Random duration for the gradient animation (between 8s and 16s)
+            const duration = Math.random() * 8 + 8;
+            line.style.animation = `gradient-animation ${duration}s ease infinite`;
+
+            // Randomize initial direction (1 for right, -1 for left)
+            let direction = Math.random() < 0.5 ? 1 : -1;
+
+            // Randomize speed for each line (between 0.1 and 0.6)
+            let speed = Math.random() * 0.5 + 0.1;
+            let velocity = speed;
+            let acceleration = 0.0005;
+            let maxSpeed = 0.8; // Set a maximum speed for gradual changes
+
+            function moveLine() {
+                const currentLeft = parseFloat(getComputedStyle(line).left) || 0;
+                line.style.left = `${currentLeft + direction * velocity}px`;
+
+                // Gradually change direction
+                if (Math.random() < 0.002) { // Change direction less frequently
+                    direction *= -1; // Reverse direction
+                }
+
+                // Gradually change speed
+                velocity += acceleration * direction;
+                velocity = Math.min(maxSpeed, Math.max(-maxSpeed, velocity)); // Keep velocity within bounds
+
+                // Ensure lines don’t go off-screen too far
+                if (currentLeft > window.innerWidth || currentLeft < -line.offsetWidth) {
+                    line.style.left = direction === 1 ? `-${line.offsetWidth}px` : `${window.innerWidth}px`; // Reset to the opposite side
+                }
+
+                requestAnimationFrame(moveLine); // Continue the animation
+            }
+
+            moveLine(); // Start moving the line
+        }
+    </script>
+</body>
+</html>
